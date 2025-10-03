@@ -1,0 +1,31 @@
+# start
+@bgm id:Loc3 vol:0.5
+@sfxhub id:Loc3_Background vol:0.2 loop:true key:ambient
+@back  id:MainBackground appearance:Loc3
+@showPrinter 
+@print "Порт. Нужно найти амулет."
+@print "Я его нашёл!"
+@hidePrinter 
+
+@set hasAmulet=false
+
+@while {hasAmulet} == false
+@wait 0.1
+@endwhile
+
+
+@sfxhub id:Pick_up vol:1
+@toast "Амулет получен!"
+@showUI AmuletItem
+@wait 1
+@hideUI AmuletItem
+
+@questUpdate text:"Вернуться к Магу на Локации 2 с амулетом."
+
+@set loc1Locked=true
+@set loc2Locked=false
+@set loc3Locked=true
+
+@sfxhub key:ambient stop:true
+@openMap out:nextLoc
+@goto Loc2.nextQuest

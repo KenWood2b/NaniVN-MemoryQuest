@@ -1,0 +1,19 @@
+@hideUI
+@hideUI
+@showUI
+
+@bgm id:MainMenu
+
+@set hasAmulet=false
+@set lastPairsResult=""
+@set whoGets=""
+@set AmuletItem=""
+
+@set loc1Locked="false"
+@set loc2Locked="false"
+@set loc3Locked="false"
+
+@input playerName summary:"Введите имя"
+@stop
+
+@goto Loc1

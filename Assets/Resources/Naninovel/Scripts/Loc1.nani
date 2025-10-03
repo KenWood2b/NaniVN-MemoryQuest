@@ -1,0 +1,84 @@
+# start
+@bgm id:Loc1 vol:0.5
+@sfxhub id:"Loc1_Sword" loop:true key:"ambient" vol:0.02
+@back  id:MainBackground appearance:Loc1
+@char  id:NPC_Warrior appearance:Warrior_Normal_Condition position:left
+@showPrinter 
+
+Воин: "Привет, {playerName}. Новые лица в казарме."
+Воин: "Есть для тебя работа! Пропал древний амулет, поможешь найти?"
+
+@choice "Помочь Воину" handler:ButtonListUI goto:.accept
+@choice Отказаться handler:ButtonListUI goto:.refuse
+@stop
+
+# accept
+Воин: "Отлично. Поговори с Магом на Локации 2."
+@questUpdate text:"Задание: поговорить с Магом на Локации 2."
+@set loc1Locked=true
+@set loc2Locked=false
+@set loc3Locked=true
+@hide NPC_Warrior
+@sfxhub stop:true key:"ambient"
+@hidePrinter
+@openMap out:nextLoc
+@goto Loc2
+
+
+# refuse
+Воин: "Жаль. Если передумаешь — возвращайся."
+@set loc1Locked=false
+@set loc2Locked=true
+@set loc3Locked=true
+@hide NPC_Warrior
+@hidePrinter 
+@goto .start
+
+
+# Final
+@back  id:MainBackground appearance:Loc1
+@bgm id:Loc1 vol:0.5
+@sfxhub id:"Loc1_Sword" loop:true key:"ambient" vol:0.02
+@char  look:left id:NPC_Warrior appearance:Warrior_Normal_Condition position:5
+@char  look:right id:NPC_Mage appearance:Mage_Normal_Condition position:-5
+
+Воин: "Ну что, как продвигается?"
+Маг: "Решение за тобой, {playerName}."
+"Кому отдать амулет?"
+
+
+
+@choice "Отдать амулет Воину." handler:ButtonListUI goto:.GiveWarrior
+@choice "Отдать амулет Магу." handler:ButtonListUI goto:.GiveMage
+@choice "Оставить себе." handler:ButtonListUI goto:.Keep
+
+@stop
+
+# GiveWarrior
+@back  id:MainBackground appearance:Loc1
+
+@set whoGets="Warrior"
+@char  look:left id:NPC_Warrior appearance:Warrior_Happy position:5
+@char  look:right id:NPC_Mage appearance:Mage_Angry position:-5
+Воин: "Отличный выбор. Не подкачал!"
+@goto End
+
+
+# GiveMage
+@back  id:MainBackground appearance:Loc1
+
+@set whoGets="Mage"
+@char  look:left id:NPC_Warrior appearance:Warrior_Angry position:5
+@char  look:right id:NPC_Mage appearance:Mage_Happy position:-5
+Маг: "Мудрое решение. Благодарю."
+@goto End
+
+
+# Keep
+@back  id:MainBackground appearance:Loc1
+
+@set whoGets="Player"
+@char  look:left id:NPC_Warrior appearance:Warrior_Angry position:5
+@char  look:right id:NPC_Mage appearance:Mage_Angry position:-5
+"Ты убираешь амулет к себе. Оба переглядываются недовольно…"
+@goto End

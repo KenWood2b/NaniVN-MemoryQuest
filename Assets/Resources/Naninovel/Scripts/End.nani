@@ -1,0 +1,15 @@
+# start
+@hide NPC_Warrior
+@hide NPC_Mage
+@back  id:MainBackground appearance:Loc1
+@sfxhub stop:true key:"ambient"
+@questUpdate text:"Квест завершён."
+
+"Квест завершён"
+
+"История на этом не заканчивается…"
+
+@hidePrinter
+@choice "Начать занова" handler:ButtonListUI goto:Main
+@choice Отказаться handler:ButtonListUI goto:Exit
+@stop

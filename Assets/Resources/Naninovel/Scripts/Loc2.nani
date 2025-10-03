@@ -1,0 +1,80 @@
+# start
+
+@bgm id:Loc2 vol:0.5
+@sfxhub id:"Loc2_Background" loop:true key:"ambient" vol:0.2
+@back  id:MainBackground appearance:Loc2
+@char  id:NPC_Mage appearance:Mage_Normal_Condition position:left
+@showPrinter 
+
+; сбрасываем переменные
+@set pairsResult="none"
+@set pairsWin=false
+@set pairsLose=false
+@set pairsCancel=false
+@set loc1Locked=true
+@set loc2Locked=true
+@set loc3Locked=true
+
+Маг: "Ты {playerName}? Хорошо, помощь пригодится."
+Маг: "Амулет спрятан где-то в порту на Локации 3. Но сначала маленькое испытание."
+Маг: "Ты готов?"
+
+@choice "Начать игру" handler:ButtonListUI goto:.game
+@choice Отказаться handler:ButtonListUI goto:.refuse
+@stop
+
+# game
+@set pairsResult="none"
+@set pairsRoute=""
+@showUI PairsMinigameUI
+@startPairs out:pairsResult
+@hideUI PairsMinigameUI
+
+; просто идём туда, куда сказала команда:
+@goto {pairsRoute}
+
+# onWin
+@print "Победа!"
+Маг: "Поздравляю иди в порт и там найдешь амулет!"
+@questUpdate text:"Идти в порт и забрать амулет."
+@set loc1Locked=true
+@set loc2Locked=true
+@set loc3Locked=false
+@hide NPC_Mage
+@hidePrinter
+@sfxhub stop:true key:"ambient"
+@openMap out:nextLoc
+@goto Loc3
+
+# onLose
+@print "Проигрыш. Попробуем ещё раз?"
+@choice "Да, ещё раз" handler:ButtonListUI goto:.game
+@choice "Потом"       handler:ButtonListUI goto:.refuse
+@stop
+
+# onCancel
+Маг: "Давай попробуем снова."
+@goto .game
+
+# nextQuest 
+@bgm id:Loc2 vol:0.5
+@sfxhub id:"Loc2_Background" loop:true key:"ambient" vol:0.2
+@back id:MainBackground appearance:Loc2 
+@showPrinter 
+@print "Тут никого нет, нужно идти к Воину." 
+@hidePrinter 
+@set loc1Locked=false
+@set loc2Locked=true
+@set loc3Locked=true
+@sfxhub stop:true key:"ambient"
+@openMap out:nextLoc
+@goto Loc1.Final
+
+# refuse
+Маг: "Жаль. Если передумаешь — возвращайся."
+@set loc1Locked=false
+@set loc2Locked=true
+@set loc3Locked=true
+@hide NPC_Mage
+@hidePrinter 
+@goto .start
